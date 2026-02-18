@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VibeSkills — 바이브 코딩 & 에이전트 스킬</title>
+
+  <!-- ✅ 인라인 SVG 파비콘 (별도 파일 불필요) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236c47ff'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='36' font-family='monospace' fill='white'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E" />
+
+  <style>
+    /* ── Reset & Base ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0d14;
+      --surface:   #16161f;
+      --card:      #1e1e2e;
+      --border:    #2a2a3d;
+      --accent:    #6c47ff;
+      --accent2:   #00d4ff;
+      --text:      #e2e2f0;
+      --muted:     #7878a0;
+      --radius:    14px;
+      --font:      'Segoe UI', system-ui, sans-serif;
+      --mono:      'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Scrollbar ─────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+    /* ── Header / Nav ──────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 13, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .nav-badge {
+      font-size: 0.72rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 24px 72px;
+      text-align: center;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-family: var(--mono);
+      color: var(--accent2);
+      border: 1px solid var(--accent2);
+      border-radius: 999px;
+      padding: 4px 14px;
+      margin-bottom: 24px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); text-decoration: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent2); }
+
+    /* ── Code Ticker ───────────────────────────────────── */
+    .ticker-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 10px 0;
+      margin-bottom: 72px;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 48px;
+      animation: ticker 28s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+
+    .ticker span {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .ticker span .kw { color: var(--accent2); }
+    .ticker span .fn { color: #c792ea; }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Section ───────────────────────────────────────── */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── Cards Grid ────────────────────────────────────── */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: border-color .2s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    .card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .card:hover::before { opacity: 0.05; }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .card-tag {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 0.72rem;
+      font-family: var(--mono);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--accent2);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    /* ── Coming Soon Banner ────────────────────────────── */
+    .coming-soon {
+      margin: 0 auto 80px;
+      max-width: 1100px;
+      padding: 0 24px;
+    }
+
+    .cs-box {
+      background: linear-gradient(135deg, #1a1230, #0f1e2e);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cs-box::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(108,71,255,0.25), transparent 70%);
+      top: -80px; right: -80px;
+      pointer-events: none;
+    }
+
+    .cs-box h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
+    .cs-box p  { color: var(--muted); max-width: 480px; margin: 0 auto 28px; font-size: 0.95rem; }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .input-row input {
+      padding: 11px 18px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.9rem;
+      width: 260px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .input-row input:focus { border-color: var(--accent); }
+    .input-row input::placeholder { color: var(--muted); }
+
+    /* ── Footer ────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    /* ── Responsive ────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero { padding: 64px 20px 48px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ════════════ HEADER ════════════ -->
+  <header>
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        VibeSkills
+      </div>
+      <ul class="nav-links">
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <span class="nav-badge">Coming Soon</span>
+    </nav>
+  </header>
+
+  <!-- ════════════ HERO ════════════ -->
+  <div class="hero">
+    <div class="hero-tag">// Vibe Coding × Agentic AI</div>
+    <h1>AI 에이전트를 위한<br/>스킬 아카이브</h1>
+    <p>바이브 코딩 워크플로우와 AI 에이전트가 활용하는 실전 스킬을 정리하고 공유합니다. 곧 콘텐츠가 채워질 예정입니다.</p>
+    <div class="hero-actions">
+      <a href="#skills" class="btn btn-primary">⚡ 스킬 살펴보기</a>
+      <a href="https://github.com" target="_blank" class="btn btn-outline">🐙 GitHub</a>
+    </div>
+  </div>
+
+  <!-- ════════════ CODE TICKER ════════════ -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span><span class="kw">const</span> skill = <span class="fn">useAgent</span>(prompt)</span>
+      <span><span class="kw">await</span> <span class="fn">vibeCoding</span>({ mode: 'flow' })</span>
+      <span><span class="kw">import</span> { <span class="fn">AgentSkill</span> } from './skills'</span>
+      <span><span class="kw">const</span> plan = <span class="fn">think</span>(context) → execute()</span>
+      <span>🤖 Agent loop: <span class="fn">observe → plan → act</span></span>
+      <span><span class="kw">yield*</span> <span class="fn">streamResponse</span>(llm, tools)</span>
+      <!-- duplicate for seamless loop -->
+      <span><span class="kw">const</span> skill = <span class="fn">useAgent</span>(prompt)</span>
+      <span><span class="kw">await</span> <span class="fn">vibeCoding</span>({ mode: 'flow' })</span>
+      <span><span class="kw">import</span> { <span class="fn">AgentSkill</span> } from './skills'</span>
+      <span><span class="kw">const</span> plan = <span class="fn">think</span>(context) → execute()</span>
+      <span>🤖 Agent loop: <span class="fn">observe → plan → act</span></span>
+      <span><span class="kw">yield*</span> <span class="fn">streamResponse</span>(llm, tools)</span>
+    </div>
+  </div>
+
+  <!-- ════════════ SKILLS SECTION ════════════ -->
+  <section id="skills">
+    <div class="section-header">
+      <h2>🧠 스킬 카테고리</h2>
+      <p>준비 중인 주제 영역입니다. 곧 각 카드마다 글이 채워집니다.</p>
+    </div>
+    <div class="grid-3">
+
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Prompt Engineering</h3>
+        <p>에이전트와 LLM에 효과적으로 명령하는 프롬프트 설계 패턴과 템플릿을 다룹니다.</p>
+        <span class="card-tag">prompt · template · chain</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h3>Tool Use & Function Calling</h3>
+        <p>외부 API, 코드 실행, 검색 등 에이전트가 도구를 다루는 방법과 스키마 설계를 정리합니다.</p>
+        <span class="card-tag">tool · schema · json</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>Agent Loop Patterns</h3>
+        <p>ReAct, Plan-and-Execute, Multi-agent 구조 등 에이전트 루프의 다양한 패턴을 탐구합니다.</p>
+        <span class="card-tag">ReAct · CoT · multi-agent</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🗂️</div>
+        <h3>Context & Memory</h3>
+        <p>벡터 DB, 요약, 윈도우 기법 등 에이전트가 장기 컨텍스트를 관리하는 전략을 다룹니다.</p>
+        <span class="card-tag">vector · rag · memory</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Vibe Coding Workflow</h3>
+        <p>AI와 함께 몰입 상태(flow)를 유지하며 빠르게 코드를 작성하는 실전 워크플로우를 공유합니다.</p>
+        <span class="card-tag">cursor · claude · copilot</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Safety & Guardrails</h3>
+        <p>에이전트가 예측 불가한 행동을 하지 않도록 제어하는 가드레일 설계와 평가 방법론입니다.</p>
+        <span class="card-tag">eval · safety · testing</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════ TOOLS SECTION ════════════ -->
+  <section id="tools">
+    <div class="section-header">
+      <h2>🛠️ 주요 도구 생태계</h2>
+      <p>다룰 예정인 툴과 프레임워크입니다.</p>
+    </div>
+    <div class="grid-3">
+
+      <div class="card">
+        <div class="card-icon">🖱️</div>
+        <h3>Cursor / Windsurf</h3>
+        <p>AI 네이티브 IDE에서 에이전트 모드를 활용한 바이브 코딩 실전 팁과 설정을 공유합니다.</p>
+        <span class="card-tag">IDE · agent-mode</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>Claude Code / Codex</h3>
+        <p>터미널 기반 에이전트 CLI 도구를 활용해 반복 작업을 자동화하는 스킬을 다룹니다.</p>
+        <span class="card-tag">CLI · automation</span>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🕸️</div>
+        <h3>LangChain / LangGraph</h3>
+        <p>에이전트 파이프라인 구성을 위한 프레임워크 핵심 개념과 실용 예제를 정리합니다.</p>
+        <span class="card-tag">graph · pipeline · node</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════ COMING SOON ════════════ -->
+  <div class="coming-soon" id="about">
+    <div class="cs-box">
+      <h2>✍️ 콘텐츠 준비 중입니다</h2>
+      <p>현재 이 사이트는 구축 초기 단계입니다. 새 글이 올라올 때 알림을 받고 싶다면 이메일을 남겨주세요.</p>
+      <div class="input-row">
+        <input type="email" placeholder="your@email.com" />
+        <a href="#" class="btn btn-primary" onclick="alert('감사합니다! 🙌'); return false;">알림 신청</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer>
+    <p>Built with ❤️ &amp; <strong>Vibe Coding</strong> · Powered by GitHub Pages · 2026</p>
+  </footer>
+
+</body>
+</html>
