@@ -5,7 +5,6 @@
 ---
 
 ## **공통 배경: Agent Skills 오픈 표준**
-
 3가지 도구 모두 **Agent Skills** 오픈 표준([agentskills.io](https://agentskills.io/))을 따른다. 원래 Anthropic이 제창했으며 OpenAI Codex·Gemini CLI·Cursor 등 여러 도구가 채용했다. 핵심 포맷은 공통이며, `SKILL.md` 파일을 중심으로 한 디렉토리 구성을 취한다.
 
 ```
@@ -202,18 +201,4 @@ ln -s ~/.agent-skills/my-skill ~/.gemini/skills/my-skill
 | 특정 워크플로우 절차 | — | ✅ |
 | 도메인 전문 지식 | — | ✅ |
 | 프로젝트 전체 규칙 | ✅ | — |
-| 온디맨드로 사용하는 전문 태스크 | — | ✅ |
-
----
-
-## **추천 파일명**
-
-```
-agent-skills-claude-codex-gemini-comparison.md
-```
-
-날짜 포함 버전도 명확하고 관리하기 좋다.
-
-```
-2026-02-agent-skills-three-tools-comparison.md
-```
+| 온디맨드로 사용하는 전문 태스크 | — | ✅ |    
