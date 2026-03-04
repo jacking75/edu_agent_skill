@@ -5,4 +5,5 @@ https://jacking75.github.io/AgentSkill/
   
 https://skills.sh/  
 https://github.com/anthropics/skills  
+https://github.com/Jeffallan/claude-skills  
 https://github.com/heilcheng/awesome-agent-skills    
